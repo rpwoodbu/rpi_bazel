@@ -17,6 +17,8 @@ package(default_visibility = ["//visibility:public"])
 
 load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 
+# Legacy suite for use with `--noincompatible_enable_cc_toolchain_resolution`
+# (default before Bazel 7), `--cpu`, and `--compiler` flags.
 cc_toolchain_suite(
     name = "toolchain",
     toolchains = {
@@ -24,6 +26,101 @@ cc_toolchain_suite(
         "armeabihf|clang": "cc_toolchain_armeabihf",
         "aarch64|clang": "cc_toolchain_aarch64",
     },
+    # This prevents wildcards from trying to evaluate this, which will not work
+    # when using `--incompatible_enable_cc_toolchain_resolution`.
+    tags = ["manual"],
+)
+
+toolchain(
+    name = "toolchain_x86_64",
+    exec_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    target_compatible_with = [
+        ":clang",
+        ":rpi",
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    toolchain = ":cc_toolchain_linux",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+)
+
+toolchain(
+    name = "toolchain_armv6",
+    exec_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    target_compatible_with = [
+        ":armv6",
+        ":clang",
+        ":rpi",
+        "@platforms//cpu:arm",
+        "@platforms//os:linux",
+    ],
+    toolchain = ":cc_toolchain_armv6_armeabihf",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+)
+
+toolchain(
+    name = "toolchain_armv7",
+    exec_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    target_compatible_with = [
+        ":armv7",
+        ":clang",
+        ":rpi",
+        "@platforms//cpu:arm",
+        "@platforms//os:linux",
+    ],
+    toolchain = ":cc_toolchain_armeabihf",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+)
+
+toolchain(
+    name = "toolchain_aarch64",
+    exec_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+    target_compatible_with = [
+        ":clang",
+        ":rpi",
+        "@platforms//cpu:aarch64",
+        "@platforms//os:linux",
+    ],
+    toolchain = ":cc_toolchain_aarch64",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+)
+
+constraint_setting(name = "compiler")
+
+constraint_value(
+    name = "clang",
+    constraint_setting = ":compiler",
+)
+
+constraint_setting(name = "sysroot")
+
+constraint_value(
+    name = "rpi",
+    constraint_setting = ":sysroot",
+)
+
+constraint_setting(name = "arm_version")
+
+constraint_value(
+    name = "armv6",
+    constraint_setting = ":arm_version",
+)
+
+constraint_value(
+    name = "armv7",
+    constraint_setting = ":arm_version",
 )
 
 filegroup(
@@ -96,6 +193,42 @@ filegroup(
         ":clang_all",
         "//tools/cc_toolchain/raspberry_pi_sysroot:everything",
     ],
+)
+
+cc_toolchain_config(
+    name = "clang-armv6-armeabihf",
+    toolchain_identifier = "clang-armv6-armeabihf",
+    cpu = "k8",
+    target_cpu = "armeabihf",
+    target_system_name = "armeabihf",
+    builtin_include_directories = [
+        "external/raspberry_pi_armeabihf/sysroot/usr/include/arm-linux-gnueabihf",
+        "external/raspberry_pi_armeabihf/sysroot/usr/include",
+        "external/org_llvm_clang/include/",
+        "external/org_llvm_clang/lib/clang/7.0.0/include/",
+        "/usr/include/",
+    ],
+    host_compiler_prefix = "wrapper",
+    host_compiler_path = "wrapper/clang-clang",
+    extra_features = [
+        "armv6_armeabihf",
+    ],
+    linker_bin_path = "external/org_llvm_clang/bin",
+)
+
+cc_toolchain(
+    name = "cc_toolchain_armv6_armeabihf",
+    toolchain_identifier = "clang-armv6-armeabihf",
+    all_files = ":clang_arm_all",
+    compiler_files = ":clang_arm_all",
+    dwp_files = ":clang_wrappers",
+    linker_files = ":clang_arm_all",
+    ar_files = ":clang_arm_all",
+    as_files = ":clang_arm_all",
+    objcopy_files = ":clang_wrappers",
+    strip_files = ":clang_wrappers",
+    supports_param_files = True,
+    toolchain_config = ":clang-armv6-armeabihf",
 )
 
 cc_toolchain_config(

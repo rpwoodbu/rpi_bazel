@@ -52,7 +52,18 @@ rpi_bazel_add()
 ```
 
 
-In `tools/bazel.rc`
+In `.bazelrc`, if using Bazel's platforms (preferred):
+
+```
+# This is the default as of Bazel 7.
+build --incompatible_enable_cc_toolchain_resolution
+
+build --extra_toolchains=@rpi_bazel//tools/cc_toolchain:all
+build:pi --platforms=@rpi_bazel//:rpi-armv7-clang
+# See the top BUILD file for other platforms for different kinds of Pi.
+```
+
+In `.bazelrc`, if using the old crosstool method (deprecated in Bazel):
 
 ```
 build --crosstool_top=@rpi_bazel//tools/cc_toolchain:toolchain

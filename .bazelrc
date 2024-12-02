@@ -1,11 +1,15 @@
 common --noenable_bzlmod
-build --noincompatible_enable_cc_toolchain_resolution
 
-build --compiler=clang
-test --compiler=clang
+# This is the default as of Bazel 7. Keeping here for clarity.
+build --incompatible_enable_cc_toolchain_resolution
+
+build --extra_toolchains=//tools/cc_toolchain:all
+build --platforms=//:rpi-x86_64-clang
 
 build --python_path=/usr/bin/python3
 test --python_path=/usr/bin/python3
 
-build --crosstool_top=//tools/cc_toolchain:toolchain
-test --crosstool_top=//tools/cc_toolchain:toolchain
+# For testing the old crosstool method.
+build:crosstool --noincompatible_enable_cc_toolchain_resolution
+build:crosstool --compiler=clang
+build:crosstool --crosstool_top=//tools/cc_toolchain:toolchain

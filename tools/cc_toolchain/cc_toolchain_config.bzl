@@ -135,6 +135,22 @@ def _impl(ctx):
         ] if ctx.attr.host_unfiltered_compile_flags else []),
     )
 
+    armv6_armeabihf_feature = feature(
+        name = "armv6_armeabihf",
+        flag_sets = [
+            flag_set(
+                actions = all_compile_actions + all_link_actions,
+                flag_groups = [
+                    flag_group(
+                        flags = [
+                            "--target=armv6-linux-gnueabihf",
+                        ],
+                    ),
+                ],
+            ),
+        ],
+    )
+
     armeabihf_feature = feature(
         name = "armeabihf",
         flag_sets = [
@@ -366,6 +382,24 @@ def _impl(ctx):
     # I can't figure out how the official bazel sysroot feature works,
     # and it appears to have 0 documentation.  Instead, make my own
     # one here and use that, since at least I can get it to work.
+    rpi_armv6_armeabihf_sysroot_feature = feature(
+        name = "rpi_armv6_armeabihf_sysroot",
+        flag_sets = [
+            flag_set(
+                actions = all_compile_actions + all_link_actions,
+                flag_groups = [flag_group(flags = [
+                    "--sysroot=external/raspberry_pi_armeabihf/sysroot",
+                ])],
+            ),
+            flag_set(
+                actions = all_compile_actions,
+                flag_groups = [flag_group(flags = [
+                    "-isysroot=external/raspberry_pi_armeabihf/sysroot",
+                ])],
+            ),
+        ],
+    )
+
     rpi_armeabihf_sysroot_feature = feature(
         name = "rpi_armeabihf_sysroot",
         flag_sets = [
@@ -544,6 +578,8 @@ def _impl(ctx):
             "debuginfo",
         ] + (["armeabihf", "rpi_armeabihf_sysroot"]
              if "armeabihf" in ctx.attr.extra_features else
+             ["armv6_armeabihf", "rpi_armeabihf_sysroot"]
+             if "armv6_armeabihf" in ctx.attr.extra_features else
              ["aarch64", "rpi_aarch64_sysroot"]
              if "aarch64" in ctx.attr.extra_features else
              [])
@@ -571,8 +607,10 @@ def _impl(ctx):
         supports_pic_feature,
         lld_feature,
         debuginfo_feature,
+        armv6_armeabihf_feature,
         armeabihf_feature,
         aarch64_feature,
+        rpi_armv6_armeabihf_sysroot_feature,
         rpi_armeabihf_sysroot_feature,
         rpi_aarch64_sysroot_feature,
     ]
