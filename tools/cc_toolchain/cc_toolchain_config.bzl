@@ -48,6 +48,10 @@ load(
     "STRIP_ACTION_NAME",
 )
 
+ORG_LLVM_CLANG = "external/" + Label("@org_llvm_clang").repo_name
+RASPBERRY_PI_AARCH64 = "external/" + Label("@raspberry_pi_aarch64").repo_name
+RASPBERRY_PI_ARMEABIHF = "external/" + Label("@raspberry_pi_armeabihf").repo_name
+
 ACTION_NAMES = struct(
     c_compile = C_COMPILE_ACTION_NAME,
     cpp_compile = CPP_COMPILE_ACTION_NAME,
@@ -388,13 +392,13 @@ def _impl(ctx):
             flag_set(
                 actions = all_compile_actions + all_link_actions,
                 flag_groups = [flag_group(flags = [
-                    "--sysroot=external/raspberry_pi_armeabihf/sysroot",
+                    "--sysroot={}/sysroot".format(RASPBERRY_PI_ARMEABIHF),
                 ])],
             ),
             flag_set(
                 actions = all_compile_actions,
                 flag_groups = [flag_group(flags = [
-                    "-isysroot=external/raspberry_pi_armeabihf/sysroot",
+                    "-isysroot={}/sysroot".format(RASPBERRY_PI_ARMEABIHF),
                 ])],
             ),
         ],
@@ -406,13 +410,13 @@ def _impl(ctx):
             flag_set(
                 actions = all_compile_actions + all_link_actions,
                 flag_groups = [flag_group(flags = [
-                    "--sysroot=external/raspberry_pi_armeabihf/sysroot",
+                    "--sysroot={}/sysroot".format(RASPBERRY_PI_ARMEABIHF),
                 ])],
             ),
             flag_set(
                 actions = all_compile_actions,
                 flag_groups = [flag_group(flags = [
-                    "-isysroot=external/raspberry_pi_armeabihf/sysroot",
+                    "-isysroot={}/sysroot".format(RASPBERRY_PI_ARMEABIHF),
                 ])],
             ),
         ],
@@ -424,13 +428,13 @@ def _impl(ctx):
             flag_set(
                 actions = all_compile_actions + all_link_actions,
                 flag_groups = [flag_group(flags = [
-                    "--sysroot=external/raspberry_pi_aarch64/sysroot",
+                    "--sysroot={}/sysroot".format(RASPBERRY_PI_AARCH64),
                 ])],
             ),
             flag_set(
                 actions = all_compile_actions,
                 flag_groups = [flag_group(flags = [
-                    "-isysroot=external/raspberry_pi_aarch64/sysroot",
+                    "-isysroot={}/sysroot".format(RASPBERRY_PI_AARCH64),
                 ])],
             ),
         ],
@@ -443,8 +447,8 @@ def _impl(ctx):
                 actions = all_compile_actions,
                 flag_groups = [flag_group(flags = [
                     "-nostdinc++",
-                    "-isystem", "external/org_llvm_libcxx/include",
-                    "-isystem", "external/org_llvm_libcxxabi/include",
+                    "-isystem", "external/{}/include".format(Label("@org_llvm_libcxx").repo_name),
+                    "-isystem", "external/{}/include".format(Label("@org_llvm_libcxxabi").repo_name),
                 ])],
             ),
             flag_set(

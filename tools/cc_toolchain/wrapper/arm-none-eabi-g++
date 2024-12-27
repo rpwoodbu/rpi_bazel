@@ -53,6 +53,7 @@ def main():
         [x for x in args
          if x.endswith(".c") or x.endswith(".S")]) > 0
 
+    # DO NOT SUBMIT: This has not been fixed to deal with canonical repo names.
     if not is_a_c_file_present:
         run("external/com_arm_developer_gcc/bin/arm-none-eabi-g++", args)
     else:

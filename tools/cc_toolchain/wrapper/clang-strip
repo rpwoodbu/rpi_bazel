@@ -44,4 +44,4 @@ do
     fi
 done
 
-exec external/org_llvm_clang/bin/llvm-strip "${ARGS[@]}"
+exec external/*org_llvm_clang/bin/llvm-strip "${ARGS[@]}"

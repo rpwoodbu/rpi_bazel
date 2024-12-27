@@ -16,6 +16,8 @@
 
 package(default_visibility = ["//visibility:public"])
 
+load("@rpi_bazel//tools/workspace/clang:util.bzl", "ORG_LLVM_LIBCXX")
+
 filegroup(
     name = "raw_headers",
     srcs = glob(["include/**"]),
@@ -39,8 +41,8 @@ cc_library(
         "src/support/runtime/**",
     ]),
     copts = [
-        "-Iexternal/org_llvm_libcxx/src/include",
-        "-Iexternal/org_llvm_libcxx/src",
+        "-I{}/src/include".format(ORG_LLVM_LIBCXX),
+        "-I{}/src".format(ORG_LLVM_LIBCXX),
         "-D_LIBCPP_BUILDING_LIBRARY",
         "-D_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER",
         "-DLIBCXX_BUILDING_LIBCXXABI",

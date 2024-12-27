@@ -16,6 +16,8 @@
 
 package(default_visibility = ["//visibility:public"])
 
+load("@rpi_bazel//tools/workspace/clang:util.bzl", "ORG_LLVM_LIBCXXABI")
+
 filegroup(
     name = "raw_headers",
     srcs = glob(["include/**"]),
@@ -35,7 +37,7 @@ cc_library(
         "src/cxa_noexception.cpp",
     ]),
     copts = [
-        "-Iexternal/org_llvm_libcxx/include",
+        "-I{}/include".format(ORG_LLVM_LIBCXXABI),
         "-D_LIBCPP_BUILDING_LIBRARY",
         "-DNDEBUG",
         "-fvisibility-inlines-hidden",

@@ -15,7 +15,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load(":cc_toolchain_config.bzl", "cc_toolchain_config")
+load(":cc_toolchain_config.bzl", "cc_toolchain_config", "ORG_LLVM_CLANG", "RASPBERRY_PI_AARCH64", "RASPBERRY_PI_ARMEABIHF")
 
 # Legacy suite for use with `--noincompatible_enable_cc_toolchain_resolution`
 # (default before Bazel 7), `--cpu`, and `--compiler` flags.
@@ -163,8 +163,8 @@ cc_toolchain_config(
     target_cpu = "k8",
     target_system_name = "k8",
     builtin_include_directories = [
-        "external/org_llvm_clang/include/",
-        "external/org_llvm_clang/lib/clang/7.0.0/include/",
+        "{}/include/".format(ORG_LLVM_CLANG),
+        "{}/lib/clang/7.0.0/include/".format(ORG_LLVM_CLANG),
         "/usr/include/",
     ],
     host_compiler_prefix = "wrapper",
@@ -202,10 +202,10 @@ cc_toolchain_config(
     target_cpu = "armeabihf",
     target_system_name = "armeabihf",
     builtin_include_directories = [
-        "external/raspberry_pi_armeabihf/sysroot/usr/include/arm-linux-gnueabihf",
-        "external/raspberry_pi_armeabihf/sysroot/usr/include",
-        "external/org_llvm_clang/include/",
-        "external/org_llvm_clang/lib/clang/7.0.0/include/",
+        "{}/sysroot/usr/include/arm-linux-gnueabihf".format(RASPBERRY_PI_ARMEABIHF),
+        "{}/sysroot/usr/include".format(RASPBERRY_PI_ARMEABIHF),
+        "{}/include/".format(ORG_LLVM_CLANG),
+        "{}/lib/clang/7.0.0/include/".format(ORG_LLVM_CLANG),
         "/usr/include/",
     ],
     host_compiler_prefix = "wrapper",
@@ -213,7 +213,7 @@ cc_toolchain_config(
     extra_features = [
         "armv6_armeabihf",
     ],
-    linker_bin_path = "external/org_llvm_clang/bin",
+    linker_bin_path = "{}/bin".format(ORG_LLVM_CLANG),
 )
 
 cc_toolchain(
@@ -238,10 +238,10 @@ cc_toolchain_config(
     target_cpu = "armeabihf",
     target_system_name = "armeabihf",
     builtin_include_directories = [
-        "external/raspberry_pi_armeabihf/sysroot/usr/include/arm-linux-gnueabihf",
-        "external/raspberry_pi_armeabihf/sysroot/usr/include",
-        "external/org_llvm_clang/include/",
-        "external/org_llvm_clang/lib/clang/7.0.0/include/",
+        "{}/sysroot/usr/include/arm-linux-gnueabihf".format(RASPBERRY_PI_ARMEABIHF),
+        "{}/sysroot/usr/include".format(RASPBERRY_PI_ARMEABIHF),
+        "{}/include/".format(ORG_LLVM_CLANG),
+        "{}/lib/clang/7.0.0/include/".format(ORG_LLVM_CLANG),
         "/usr/include/",
     ],
     host_compiler_prefix = "wrapper",
@@ -249,7 +249,7 @@ cc_toolchain_config(
     extra_features = [
         "armeabihf",
     ],
-    linker_bin_path = "external/org_llvm_clang/bin",
+    linker_bin_path = "{}/bin".format(ORG_LLVM_CLANG),
 )
 
 cc_toolchain(
@@ -274,10 +274,10 @@ cc_toolchain_config(
     target_cpu = "aarch64",
     target_system_name = "aarch64",
     builtin_include_directories = [
-        "external/raspberry_pi_aarch64/sysroot/usr/include/arm-linux-aarch64",
-        "external/raspberry_pi_aarch64/sysroot/usr/include",
-        "external/org_llvm_clang/include/",
-        "external/org_llvm_clang/lib/clang/7.0.0/include/",
+        "{}/sysroot/usr/include/arm-linux-aarch64".format(RASPBERRY_PI_AARCH64),
+        "{}/sysroot/usr/include".format(RASPBERRY_PI_AARCH64),
+        "{}/include/".format(ORG_LLVM_CLANG),
+        "{}/lib/clang/7.0.0/include/".format(ORG_LLVM_CLANG),
         "/usr/include/",
     ],
     host_compiler_prefix = "wrapper",
@@ -285,7 +285,7 @@ cc_toolchain_config(
     extra_features = [
         "aarch64",
     ],
-    linker_bin_path = "external/org_llvm_clang/bin",
+    linker_bin_path = "{}/bin".format(ORG_LLVM_CLANG),
 )
 
 cc_toolchain(
