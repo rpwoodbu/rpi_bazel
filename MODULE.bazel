@@ -1,0 +1,7 @@
+module(name = "rpi_bazel", version = "0.0.0")
+
+bazel_dep(name = "platforms", version = "0.0.10")
+
+rpi_bazel_repos = use_extension("//tools/workspace:extension.bzl", "rpi_bazel_repos")
+
+use_repo(rpi_bazel_repos, "org_llvm_clang", "org_llvm_libcxxabi", "org_llvm_libcxx", "raspberry_pi_aarch64", "raspberry_pi_armeabihf")
